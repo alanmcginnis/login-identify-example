@@ -1,10 +1,11 @@
 const express = require('express');
 const mysql = require("mysql")
+// Required
 const dotenv = require('dotenv')
-
-const app = express();
 dotenv.config({ path: './.env'})
+const path = require("path")
 
+// Database
 const db = mysql.createConnection({
   host: process.env.DATABASE_HOST,
   user: process.env.DATABASE_USER,
@@ -19,4 +20,21 @@ db.connect((error) => {
   } else {
       console.log("MySQL connected!")
   }
+})
+
+// Config + Init
+const publicDir = path.join(__dirname, './public')
+const app = express();
+
+app.set('view engine', 'hbs')
+app.use(express.static(publicDir))
+
+// Routes
+
+app.get("/", (req, res) => {
+  res.render("index")
+})
+
+app.listen(3000, ()=> {
+  console.log("server started on port 3000")
 })
