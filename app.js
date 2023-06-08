@@ -32,7 +32,8 @@ app.use(express.static(publicDir))
 // Routes
 
 app.get("/", (req, res) => {
-  res.render("index")
+  // res.render("index")
+  res.send('Hello World!');
 })
 
 app.listen(3000, ()=> {
