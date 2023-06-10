@@ -20,6 +20,7 @@ app.set("view engine", "ejs");
 app.locals.isActiveRoute = isActiveRoute;
 
 app.use("/", require("./lib/routes/main"));
+app.use("/login", require("./lib/routes/login"));
 app.use("/register", require("./lib/routes/register"));
 
 app.listen(process.env.PORT || 3000, () => {
