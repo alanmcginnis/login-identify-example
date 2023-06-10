@@ -1,40 +1,27 @@
-const express = require('express');
-const mysql = require("mysql")
+const express = require("express");
+const expressLayout = require("express-ejs-layouts");
+const { isActiveRoute } = require("./lib/routes/routeHelpers");
 // Required
-const dotenv = require('dotenv')
-dotenv.config({ path: './.env'})
-const path = require("path")
+const dotenv = require("dotenv");
+dotenv.config({ path: "./.env" });
 
 // // Database
-const db = mysql.createConnection({
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE,
-  port: process.env.DATABASE_PORT
-})
+const connectDB = require("./lib/database/db");
+connectDB();
 
-db.connect((error) => {
-  if(error) {
-      console.log(error)
-  } else {
-      console.log("MySQL connected!")
-  }
-})
-
-// // Config + Init
-const publicDir = path.join(__dirname, './public')
 const app = express();
+app.use(express.static("public"));
 
-app.set('view engine', 'hbs')
-app.use(express.static(publicDir))
+// Templating Engine
+app.use(expressLayout);
+app.set("layout", "./layouts/main");
+app.set("view engine", "ejs");
 
-// Routes
+app.locals.isActiveRoute = isActiveRoute;
 
-app.get("/", (req, res) => {
-  res.render("index")
-})
+app.use("/", require("./lib/routes/main"));
+app.use("/register", require("./lib/routes/register"));
 
-app.listen(process.env.PORT || 3000, ()=> {
-  console.log("server started on port 3000")
-})
+app.listen(process.env.PORT || 3000, () => {
+  console.log("server started on port 3000");
+});
